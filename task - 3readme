@@ -1,0 +1,34 @@
+Things I Learnt from the task :
+1) Basic Ruby syntax 
+Resource Used : https://www.tutorialspoint.com/ruby/index.htm
+
+2)Got to know more about web scraping, why it is used and how it is useful.
+for eg: in commercial webpages we can use webpage to sort our desired choices from a long list.
+
+3) Know more about how to use NOKOGIRI. 
+
+STEPS: 
+Installed ruby and NOKOGIRI using linux terminal. 
+
+Resources Used:
+https://github.com/sparklemotion/nokogiri
+
+Completed the task using the tutorial page of NOKOGIRI.
+https://nokogiri.org/tutorials/parsing_an_html_xml_document.html
+Things learnt : 
+# SEARCHING AND PARSING AN HTML DOCUMENT.
+
+
+Read an article about XPATH syntax.
+LINK : https://www.w3schools.com/xml/xpath_syntax.asp
+
+
+During the course of doing the task I was constantly facing a problem in the search.xpath section.
+So searching more lead me to a StackOverflow answer which helped me to find the path of the search page.(@class="BNeawe vvjwJb AP7Wnd")
+ANSWER::
+https://stackoverflow.com/questions/56392962/scrape-google-search-results-titles-and-urls-using-python
+
+
+THIS PROGRAM WORKS WITH EVERY SEARCH RESULT ON EDITING THE CODE ::
+LINE 5 
+q=(your desired search)
