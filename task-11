@@ -1,0 +1,122 @@
+const start_ball_velocity = 4;
+const ball_size = 25;
+
+const bwidth = 10;     						// paddle width.
+const bheight = 100;   						// paddle height.
+
+var p1pos, p2pos;
+var p1speed, p2speed;
+var p1score, p2score;
+var ball, ballspeed;
+
+function board()						//Board Setup.
+{
+
+	createCanvas(800, 500);					//Canvas for playing.
+	p1pos = p2pos = height / 2 - 20;			//Player position.
+	p1speed = p2speed = 10;
+	p1score = p2score = 0;
+	ball = createVector(width/2, height/2);		//Ball in the middle
+	ballspeed = createVector(random(-1,1), random(-1,1));  // Ball goes here and there.
+	ballspeed.setMag(start_ball_velocity); 			//refer line 1
+	textAlign(CENTER);
+	textSize(50);						//size of the scoreboard
+	fill(1000);						// Brightness of the elements 
+}
+
+function draw() 
+{
+	background(100);					//Intensity of blackness
+	rect(bwidth *2, p1pos, bwidth, bheight);
+	rect(width - (bwidth *3) , p2pos, bwidth, bheight);
+
+	ellipse(ball.x, ball.y, ball_size);			//Ball
+
+	text(p1score + "  |  " + p2score, width/2, 50);		//ScoreBoard
+
+	controls();
+	
+	handleBall();
+}
+
+function handleBall() {
+	ball.x = ball.x + ballspeed.x;
+	ball.y = ball.y + ballspeed.y;
+
+	//collisions up and down
+	if(ball.y > height || ball.y < 0)
+	   ballspeed.y *= -1 				//Back to y-axis
+	
+	//ball and paddle collides
+	if(ball.x <= bwidth * 3) {
+	  if(ball.x <= bwidth) {
+	     p2score++;
+	     reset();
+             return;
+        }
+
+
+// collision on left paddle
+	if (ball.y > p1pos && ball.y < p1pos + bheight) {
+	    if(ballspeed.x >0) {
+	       ballspeed.x *= -1;
+	       ballspeed.mult(random(1, 1.1));
+            }			
+	}
+}  else if (ball.x >= width - (bwidth * 3)) { // right paddle
+
+    if (ball.x >= width - bwidth) { // out of bounds
+
+      p1score++;
+      reset();
+      return;
+
+    // collision on right paddle
+    if (ball.y > p2pos && ball.y < p2pos + bheight) {
+
+      if (ballspeed.x > 0) { // prevent the ball from getting stuck inside paddle
+
+        ballspeed.x *= -1;
+        ballspeed.mult(random(1, 1.1));
+      }
+    }
+
+  }
+
+}
+function reset() {
+
+  ballspeed.setMag(start_ball_velocity); 			// set to default speed
+  ball = createVector(width / 2, height / 2);			 // aligned
+}
+
+function controls() {
+	
+	if(keyIsDown(87)) {
+	p1speed +=5;
+	}
+	else if (keyIsDown(83)) {
+	p1speed += 5;
+	}
+
+       if (keyIsDown(UP_ARROW)) {
+           p2speed -= 5;
+       } 
+	else if (keyIsDown(DOWN_ARROW)) {
+                 player2Velocity += 5;
+       }
+	
+	p1pos += p1speed;
+	p2pos += p2speed;
+
+
+
+
+
+	p1speed *= 0.4;
+	p2speed *= 0.4;
+	
+	p1pos = constrain(p1pos, 0, height - bheight);
+  	p2pos = constrain(p2pos, 0, height - bheight);
+
+}
