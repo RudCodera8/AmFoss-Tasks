@@ -1,122 +1,131 @@
-const start_ball_velocity = 4;
-const ball_size = 25;
 
-const bwidth = 10;     						// paddle width.
-const bheight = 100;   						// paddle height.
+const start_ball_speed = 5;
+const ball_size = 30;
+
+const pwidth = 15;
+const pheight = 90;
 
 var p1pos, p2pos;
-var p1speed, p2speed;
-var p1score, p2score;
-var ball, ballspeed;
+var p1v, p2v;
+var p1s, p2s;
 
-function board()						//Board Setup.
-{
+var ball, ballVelocity;
 
-	createCanvas(800, 500);					//Canvas for playing.
-	p1pos = p2pos = height / 2 - 20;			//Player position.
-	p1speed = p2speed = 10;
-	p1score = p2score = 0;
-	ball = createVector(width/2, height/2);		//Ball in the middle
-	ballspeed = createVector(random(-1,1), random(-1,1));  // Ball goes here and there.
-	ballspeed.setMag(start_ball_velocity); 			//refer line 1
-	textAlign(CENTER);
-	textSize(50);						//size of the scoreboard
-	fill(1000);						// Brightness of the elements 
+function setup() {
+
+  createCanvas(800, 400);
+
+  p1pos = p2pos = height / 2 - 50; 
+
+  p1v = p2v = 0;
+  p1s = p2s = 0;
+
+  ball = createVector(width / 2, height / 2); 
+  ballVelocity = createVector(random(-1, 1), random(-1, 1));
+  ballVelocity.setMag(start_ball_speed); 
+
+  textAlign(CENTER);
+  textSize(30);
+  fill(500);
 }
 
-function draw() 
-{
-	background(100);					//Intensity of blackness
-	rect(bwidth *2, p1pos, bwidth, bheight);
-	rect(width - (bwidth *3) , p2pos, bwidth, bheight);
+function draw() {
 
-	ellipse(ball.x, ball.y, ball_size);			//Ball
+  background(100);
 
-	text(p1score + "  |  " + p2score, width/2, 50);		//ScoreBoard
+ 
+  rect(pwidth * 2, p1pos, pwidth, pheight);
+  rect(width - (pwidth * 3), p2pos, pwidth, pheight);
 
-	controls();
-	
-	handleBall();
+  ellipse(ball.x, ball.y, ball_size);
+
+  text(p1s + "  |  " + p2s, width / 2, 50);
+
+  handlePaddles();
+
+  handleBall();
 }
 
 function handleBall() {
-	ball.x = ball.x + ballspeed.x;
-	ball.y = ball.y + ballspeed.y;
 
-	//collisions up and down
-	if(ball.y > height || ball.y < 0)
-	   ballspeed.y *= -1 				//Back to y-axis
-	
-	//ball and paddle collides
-	if(ball.x <= bwidth * 3) {
-	  if(ball.x <= bwidth) {
-	     p2score++;
-	     reset();
-             return;
-        }
+  ball.x += ballVelocity.x;
+  ball.y += ballVelocity.y;
 
+  if (ball.y > height || ball.y < 0)
+    ballVelocity.y *= -1; 
 
-// collision on left paddle
-	if (ball.y > p1pos && ball.y < p1pos + bheight) {
-	    if(ballspeed.x >0) {
-	       ballspeed.x *= -1;
-	       ballspeed.mult(random(1, 1.1));
-            }			
-	}
-}  else if (ball.x >= width - (bwidth * 3)) { // right paddle
+  if (ball.x <= pwidth * 3) { 
 
-    if (ball.x >= width - bwidth) { // out of bounds
+    if (ball.x <= pwidth) { 
 
-      p1score++;
+      p2s++;
       reset();
       return;
+    }
 
-    // collision on right paddle
-    if (ball.y > p2pos && ball.y < p2pos + bheight) {
+   
+    if (ball.y > p1pos && ball.y < p1pos + pheight) {
 
-      if (ballspeed.x > 0) { // prevent the ball from getting stuck inside paddle
+      if (ballVelocity.x < 0) { 
 
-        ballspeed.x *= -1;
-        ballspeed.mult(random(1, 1.1));
+        ballVelocity.x *= -1;
+        ballVelocity.mult(random(1, 1.1));
+      }
+    }
+
+  } else if (ball.x >= width - (pwidth * 3)) { 
+
+    if (ball.x >= width - pwidth) { 
+
+      p1s++;
+      reset();
+      return;
+    }
+
+    if (ball.y > p2pos && ball.y < p2pos + pheight) {
+
+      if (ballVelocity.x > 0) {
+        ballVelocity.x *= -1;
+        ballVelocity.mult(random(1, 1.1));
       }
     }
 
   }
 
 }
+
 function reset() {
 
-  ballspeed.setMag(start_ball_velocity); 			// set to default speed
-  ball = createVector(width / 2, height / 2);			 // aligned
+  ballVelocity.setMag(start_ball_speed); 
+  ball = createVector(width / 2, height / 2);
 }
 
-function controls() {
-	
-	if(keyIsDown(87)) {
-	p1speed +=5;
-	}
-	else if (keyIsDown(83)) {
-	p1speed += 5;
-	}
+function handlePaddles() {
 
-       if (keyIsDown(UP_ARROW)) {
-           p2speed -= 5;
-       } 
-	else if (keyIsDown(DOWN_ARROW)) {
-                 player2Velocity += 5;
-       }
-	
-	p1pos += p1speed;
-	p2pos += p2speed;
+  if (keyIsDown(87)) {
 
 
+    p1v -= 5;
+  } else if (keyIsDown(83)) {
 
 
+    p1v += 5;
+  }
 
-	p1speed *= 0.4;
-	p2speed *= 0.4;
-	
-	p1pos = constrain(p1pos, 0, height - bheight);
-  	p2pos = constrain(p2pos, 0, height - bheight);
+  if (keyIsDown(UP_ARROW)) {
 
+
+    p2v -= 5;
+  } else if (keyIsDown(DOWN_ARROW)) {
+  
+
+    p2v += 5;
+  }
+
+  p1pos += p1v;
+  p2pos += p2v;
+
+  /* friction */
+  p1v *= 0.4;
+  p2v *= 0.4;
 }
